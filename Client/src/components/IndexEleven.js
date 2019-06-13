@@ -5,9 +5,9 @@ import Grid from '@material-ui/core/Grid';
 import Chip from '@material-ui/core/Chip'
 import { withStyles } from '@material-ui/core/styles';
 import AutoSuggest from "./AutoSuggest";
-import values from './ValArr';
 import TextFieldLabel from "./TextFieldLabel";
-
+import { Query } from 'react-apollo';
+import gql from 'graphql-tag';
 const styles = theme => ({
     root: {
         display: 'flex',
@@ -46,7 +46,7 @@ class IndexEleven extends Component {
         super(props);
         // Don't call this.setState() here!
         this.state = {
-            maxCount: 50, currentCount: 0, ValArr: values.ValArr, inputvalue: null, inputArr: [], value: '',
+            maxCount: 50, currentCount: 0, inputvalue: null, inputArr: [], value: '',
             suggestions: []
         };
         this.handleClick = this.handleClick.bind(this)
@@ -85,6 +85,15 @@ class IndexEleven extends Component {
         const { classes } = this.props;
         const { inputArr, inputvalue } = this.state;
         return (
+            <Query query={GET_LANGUAGES} >
+                {({ data, error, loading, fetchMore }) => {
+                    if (loading) {
+                        return 'loading...';
+                    }
+                    if (error) {
+                        return JSON.stringify(error);
+                    }
+                    return (
             <Grid container 
             className={classes.root}
             direction="column"
@@ -111,10 +120,19 @@ class IndexEleven extends Component {
                         )
                     }
                 </Grid>
-            </Grid>            
+            </Grid>   
+                    )
+                }}
+            </Query>          
         );
     }
 }
-
+const GET_LANGUAGES = gql`
+{
+  languages{
+    label
+  }
+}
+`;
 
 export default withStyles(styles)(IndexEleven);

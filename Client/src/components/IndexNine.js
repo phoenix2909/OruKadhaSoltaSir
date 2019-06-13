@@ -5,7 +5,6 @@ import Grid from '@material-ui/core/Grid';
 import Chip from '@material-ui/core/Chip';
 import { withStyles } from '@material-ui/core/styles';
 import AutoSuggest from "./AutoSuggest";
-import skills from './SkillsObj'
 import TextFieldLabel from './TextFieldLabel'
 import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
@@ -48,7 +47,7 @@ class IndexNine extends Component {
         super(props);
         // Don't call this.setState() here!
         this.state = {
-            maxCount: 50, currentCount: 0, SkillsObj: skills.SkillsObj, inputvalue: null, inputArr: [], value: '',
+            maxCount: 50, currentCount: 0, inputvalue: null, inputArr: [], value: '',
             suggestions: []
         };
         this.handleClick = this.handleClick.bind(this)

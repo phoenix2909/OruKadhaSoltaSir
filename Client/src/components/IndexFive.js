@@ -5,7 +5,6 @@ import Grid from '@material-ui/core/Grid';
 import Chip from '@material-ui/core/Chip';
 import { withStyles } from '@material-ui/core/styles';
 import AutoSuggest from "./AutoSuggest";
-import languages from './LangArr';
 import TextFieldLabel from './TextFieldLabel';
 import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
