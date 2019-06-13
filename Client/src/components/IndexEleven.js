@@ -64,11 +64,13 @@ class IndexEleven extends Component {
     }
     handleClick1 = (e) => {
         let { inputArr, inputvalue } = this.state;
-        inputArr.push(inputvalue);
-        inputvalue = "";
-        this.setState({
-            inputArr, inputvalue
-        });
+        if (inputvalue !== '') {
+            inputArr.push(inputvalue);
+            inputvalue = "";
+            this.setState({
+                inputArr, inputvalue
+            });
+        }
 
     }
 
@@ -104,7 +106,7 @@ class IndexEleven extends Component {
                 </Grid>
                 <Grid container direction="row" alignItems="stretch">
                     <Grid item style={{width:'80%'}}>
-                    <AutoSuggest handleClick={this.handleClick} value={inputvalue} />
+                    <AutoSuggest handleClick={this.handleClick} value={inputvalue} sugges={data.languages}/>
                     </Grid>
                     <Grid item style={{width:'20%'}}>
                     <Button size="medium" variant="contained" color="primary" style={{height:'58%',top:16}}>

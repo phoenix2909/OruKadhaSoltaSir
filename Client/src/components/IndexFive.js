@@ -57,7 +57,6 @@ export class IndexFive extends Component {
 
   handleClick = (e) => {
     let { inputvalue } = this.state;
-    console.log(e)
     inputvalue = e
     this.setState({
       inputvalue

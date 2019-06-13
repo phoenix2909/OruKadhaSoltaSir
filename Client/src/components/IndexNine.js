@@ -65,11 +65,13 @@ class IndexNine extends Component {
     }
     handleClick1 = (e) => {
         let { inputArr, inputvalue } = this.state;
-        inputArr.push(inputvalue);
-        inputvalue = "";
-        this.setState({
-            inputArr, inputvalue
-        });
+        if (inputvalue !== '') {
+            inputArr.push(inputvalue);
+            inputvalue = "";
+            this.setState({
+                inputArr, inputvalue
+            });
+        }
 
     }
 
