@@ -22,21 +22,6 @@ const styles = theme => ({
     container: {
         position: 'relative',
     },
-    suggestionsContainerOpen: {
-        position: 'absolute',
-        zIndex: 1,
-        marginTop: theme.spacing.unit,
-        left: 0,
-        right: 0,
-    },
-    suggestion: {
-        display: 'block',
-    },
-    suggestionsList: {
-        margin: 0,
-        padding: 0,
-        listStyleType: 'none',
-    },
     divider: {
         height: theme.spacing.unit * 2,
     },
@@ -47,8 +32,9 @@ class IndexNine extends Component {
         super(props);
         // Don't call this.setState() here!
         this.state = {
-            maxCount: 50, currentCount: 0, inputvalue: null, inputArr: [], value: '',
-            suggestions: []
+            maxCount: 50, currentCount: 0, inputvalue: null, inputArr: props.states.inputArr,
+            suggestions: [],
+            selected_skillsArr:props.states.selected_skillsArr,
         };
         this.handleClick = this.handleClick.bind(this)
         this.handleClick1 = this.handleClick1.bind(this)
@@ -63,23 +49,26 @@ class IndexNine extends Component {
         });
 
     }
-    handleClick1 = (e) => {
-        let { inputArr, inputvalue } = this.state;
+    handleClick1 = (e, skillsList) => {
+        let { inputArr, inputvalue, selected_skillsArr } = this.state;
         if (inputvalue !== '') {
+            let skillsMutateList = skillsList.filter(lang => lang.label === inputvalue).map(langu => langu.id)[0];
+            console.log(skillsMutateList);
+            selected_skillsArr.push(skillsMutateList);
+            console.log(selected_skillsArr);
             inputArr.push(inputvalue);
             inputvalue = "";
             this.setState({
-                inputArr, inputvalue
+                inputArr, inputvalue, selected_skillsArr: selected_skillsArr
             });
         }
 
     }
 
-    handleDelete = data => () => {
+    handleDelete = i => () => {
         this.setState(state => {
             const { inputArr } = this.state
-            const chipToDelete = inputArr.indexOf(data);
-            inputArr.splice(chipToDelete, 1);
+            inputArr.splice(i, 1);
             return { inputArr };
         });
     };
@@ -88,7 +77,7 @@ class IndexNine extends Component {
         const { inputArr, inputvalue } = this.state;
         const { classes }=this.props;
         return (
-            <Query query={GET_LANGUAGES} >
+            <Query query={GET_SKILLS} >
                 {({ data, error, loading, fetchMore }) => {
                     if (loading) {
                         return 'loading...';
@@ -106,18 +95,16 @@ class IndexNine extends Component {
                 </Grid>
                 <Grid container direction="row" alignItems="stretch">
                     <Grid item style={{width:'80%'}}>
-                    <AutoSuggest handleClick={this.handleClick} value={inputvalue} sugges={data.languages}/>
+                    <AutoSuggest handleClick={this.handleClick} value={inputvalue} sugges={data.skills}/>
                     </Grid>
                     <Grid item style={{width:'20%'}}>
                     <Button size="medium" variant="contained" color="primary" style={{height:'58%',top:16}}>
-                        <AddIcon onClick={this.handleClick1} />
+                        <AddIcon onClick={(e) => {this.handleClick1(e,data.skills)}} />
                     </Button>
                     </Grid>
                 </Grid>
-                <Grid item container direction="row" justify="center" alignItems="center">
-                    {inputArr.length !== 0 && inputArr.map((value, index) =>
-                        <Chip key={`${index}`} label={value} onDelete={this.handleDelete()} />)
-                    }
+                <Grid item >
+                    {inputArr && inputArr.map((skill, i) => <Chip key={`${i}`} label={skill} onDelete={this.handleDelete(i)} />)}
                 </Grid>
                 
                 </Grid>
@@ -128,10 +115,11 @@ class IndexNine extends Component {
     }
 }
 
-const GET_LANGUAGES = gql`
+const GET_SKILLS = gql`
 {
-  languages{
+  skills{
     label
+    id
   }
 }
 `;

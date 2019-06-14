@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import deburr from 'lodash/deburr';
 import Autosuggest from 'react-autosuggest';
 import match from 'autosuggest-highlight/match';
@@ -179,9 +178,5 @@ class AutoSuggest extends React.Component {
         );
     }
 }
-
-Autosuggest.propTypes = {
-    classes: PropTypes.object.isRequired,
-};
 
 export default withStyles(styles)(AutoSuggest);

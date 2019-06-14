@@ -45,7 +45,6 @@ const style = theme => ({
   container: {
     width: "100%",
     height: "fit-content",
-    // overflow: "auto",
     paddingBottom: 74
   },
   header: {
@@ -66,7 +65,7 @@ class HomeComp extends Component {
     this.state = {
       user_id: "50e21e38-d914-479f-a39e-fab882237063",
       profile_id : '',
-      step: 1,
+      step: 9,
       stateIndex:[
         {
           full_name:'',
@@ -86,8 +85,29 @@ class HomeComp extends Component {
           cur_loc:''
         },
         {
-          selected_lang_arr:[]
+          selected_lang_arr:[],
+          inputArr:[]
         },
+        {
+          project_abst : ''
+        },
+        {
+          
+        },
+        {
+          
+        },
+        {
+          inputArr :[],
+          selected_skillsArr:[]
+        },
+        {
+          
+        },
+        {
+          inputArr:[],
+          selected_valuesArr : []
+        }
       ],
       
     };
@@ -278,6 +298,99 @@ class HomeComp extends Component {
         })
       return false 
     }
+    else if(this.state.step === 6)
+    {
+      await myClient.mutate({
+        mutation: gql`
+         mutation UpdateProjectAbst($profile_id:String!,$project_abst:String) 
+        {
+          update_project_abstraction(profile_id: $profile_id, project_abst: $project_abst) 
+          {
+            status
+            profile
+            {
+              id
+            }
+            message
+          }
+        }
+        `,
+        variables: {
+          "project_abst": this.state.stateIndex[5]['project_abst'],
+          "profile_id": this.state.profile_id
+        }
+      })
+        .then(data => {
+          console.log(data.data);
+          console.log(this.state);
+        })
+        .catch(err => {
+          console.log(err);
+        })
+      return false 
+    }
+    else if (this.state.step === 9)
+    {
+      await myClient.mutate({
+        mutation: gql`
+         mutation UpdateSkills($profile_id:String!,$selected_skillsArr:[Int]) 
+        {
+          update_skills(profile_id: $profile_id, selected_skillsArr: $selected_skillsArr) 
+          {
+            status
+            profile
+            {
+              id
+            }
+            message
+          }
+        }
+        `,
+        variables: {
+          "selected_skillsArr": this.state.stateIndex[8]['selected_skillsArr'],
+          "profile_id": this.state.profile_id
+        }
+      })
+        .then(data => {
+          console.log(data.data);
+          console.log(this.state);
+        })
+        .catch(err => {
+          console.log(err);
+        })
+      return false 
+    }
+    else if (this.state.step === 11)
+    {
+      await myClient.mutate({
+        mutation: gql`
+         mutation UpdateValues($profile_id:String!,$selected_valuesArr:[Int]) 
+        {
+          update_values(profile_id: $profile_id, selected_valuesArr: $selected_valuesArr) 
+          {
+            status
+            profile
+            {
+              id
+            }
+            message
+          }
+        }
+        `,
+        variables: {
+          "selected_valuesArr": this.state.stateIndex[8]['selected_valuesArr'],
+          "profile_id": this.state.profile_id
+        }
+      })
+        .then(data => {
+          console.log(data.data);
+          console.log(this.state);
+        })
+        .catch(err => {
+          console.log(err);
+        })
+      return false 
+    }
   };
   
   // Go back to prev step
@@ -303,9 +416,9 @@ class HomeComp extends Component {
         component = (
           <Grid item className={classes.content}>
             <IndexOne 
-                handleChange={this.handleStatesUpdate}
-                states={this.state.stateIndex[step-1]}
-                />
+              handleChange={this.handleStatesUpdate}
+              states={this.state.stateIndex[step-1]}
+            />
           </Grid>
         );
         break;
@@ -314,8 +427,8 @@ class HomeComp extends Component {
             component = (
             <Grid item className={classes.content}>
             <IndexTwo 
-                  handleChange={this.handleStatesUpdate}
-              states={this.state.stateIndex[step-1]}
+              handleChange={this.handleStatesUpdate}
+              states={this.state.stateIndex[step - 1]}
             />
           </Grid>
         );
@@ -338,7 +451,7 @@ class HomeComp extends Component {
             <IndexFour 
               handleChange={this.handleStatesUpdate} 
               states={this.state.stateIndex[step - 1]}
-              />
+            />
           </Grid>
         );
         break;
@@ -347,7 +460,7 @@ class HomeComp extends Component {
           component = (
             <Grid item className={classes.content}>
             <IndexFive 
-              handleChange={this.handleChange} 
+              handleChange={this.handleStatesUpdate} 
               states={this.state.stateIndex[step - 1]}
             />
           </Grid>
@@ -357,7 +470,10 @@ class HomeComp extends Component {
       case 6:
         component = (
           <Grid item className={classes.content}>
-            <IndexSix handleChange={this.handleChange} />
+            <IndexSix 
+              handleChange={this.handleStatesUpdate} 
+              states={this.state.stateIndex[step - 1]}
+            />
           </Grid>
         );
         break;
@@ -365,7 +481,10 @@ class HomeComp extends Component {
       case 7:
         component = (
           <Grid item className={classes.content}>
-            <IndexSeven handleChange={this.handleChange} />
+            <IndexSeven 
+              handleChange={this.handleStatesUpdate}
+              states={this.state.stateIndex[step - 1]}            
+            />
           </Grid>
         );
         break;
@@ -373,7 +492,10 @@ class HomeComp extends Component {
       case 8:
         component = (
           <Grid item className={classes.content}>
-            <IndexEight handleChange={this.handleChange} />
+            <IndexEight
+              handleChange={this.handleStatesUpdate}
+              states={this.state.stateIndex[step - 1]}       
+            />
           </Grid>
         );
         break;
@@ -381,7 +503,10 @@ class HomeComp extends Component {
       case 9:
         component = (
           <Grid item className={classes.content}>
-            <IndexNine handleChange={this.handleChange} />
+            <IndexNine 
+              handleChange={this.handleStatesUpdate}
+              states={this.state.stateIndex[step - 1]}
+            />
           </Grid>
         );
         break;
@@ -389,7 +514,10 @@ class HomeComp extends Component {
       case 10:
         component = (
           <Grid item className={classes.content}>
-            <IndexTen handleChange={this.handleChange} />
+            <IndexTen 
+              handleChange={this.handleStatesUpdate}
+              states={this.state.stateIndex[step - 1]} 
+            />
           </Grid>
         );
         break;
@@ -397,7 +525,10 @@ class HomeComp extends Component {
       case 11:
         component = (
           <Grid item className={classes.content}>
-            <IndexEleven handleChange={this.handleChange} />
+            <IndexEleven 
+              handleChange={this.handleStatesUpdate}
+              states={this.state.stateIndex[step - 1]}         
+            />
           </Grid>
         );
         break;
@@ -405,7 +536,10 @@ class HomeComp extends Component {
       case 12:
         component = (
           <Grid item className={classes.content}>
-            <IndexTwelve handleChange={this.handleChange} />
+            <IndexTwelve 
+              handleChange={this.handleStatesUpdate}
+              states={this.state.stateIndex[step - 1]}   
+            />
           </Grid>
         );
         break;
@@ -413,7 +547,10 @@ class HomeComp extends Component {
       case 13:
         component = (
           <Grid item className={classes.content}>
-            <IndexThirteen handleChange={this.handleChange} />
+            <IndexThirteen 
+              handleChange={this.handleStatesUpdate}
+              states={this.state.stateIndex[step - 1]}    
+            />
           </Grid>
         );
         break;
@@ -478,4 +615,4 @@ class HomeComp extends Component {
   }
 }
 
-export default withStyles(style)(HomeComp);
+export default withStyles(style)(HomeComp)

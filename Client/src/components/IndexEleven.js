@@ -46,8 +46,8 @@ class IndexEleven extends Component {
         super(props);
         // Don't call this.setState() here!
         this.state = {
-            maxCount: 50, currentCount: 0, inputvalue: null, inputArr: [], value: '',
-            suggestions: []
+            maxCount: 50, currentCount: 0, inputvalue: null, inputArr: props.states.inputArr, value: '',
+            suggestions: [],selected_valuesArr:props.states.selected_valuesArr
         };
         this.handleClick = this.handleClick.bind(this)
         this.handleClick1 = this.handleClick1.bind(this)
@@ -62,23 +62,25 @@ class IndexEleven extends Component {
         });
 
     }
-    handleClick1 = (e) => {
-        let { inputArr, inputvalue } = this.state;
+    handleClick1 = (e, valuesList) => {
+        let { inputArr, inputvalue, selected_valuesArr } = this.state;
         if (inputvalue !== '') {
+            let valuesMutateList = valuesList.filter(value => value.label === inputvalue).map(val => val.id)[0];
+            console.log(valuesMutateList);
+            selected_valuesArr.push(valuesMutateList);
+            console.log(selected_valuesArr);
             inputArr.push(inputvalue);
             inputvalue = "";
             this.setState({
-                inputArr, inputvalue
+                inputArr, inputvalue, selected_valuesArr: selected_valuesArr
             });
         }
 
     }
-
-    handleDelete = data => () => {
+    handleDelete = i => () => {
         this.setState(state => {
             const { inputArr } = this.state
-            const chipToDelete = inputArr.indexOf(data);
-            inputArr.splice(chipToDelete, 1);
+            inputArr.splice(i, 1);
             return { inputArr };
         });
     };
@@ -87,7 +89,7 @@ class IndexEleven extends Component {
         const { classes } = this.props;
         const { inputArr, inputvalue } = this.state;
         return (
-            <Query query={GET_LANGUAGES} >
+            <Query query={GET_VALUES} >
                 {({ data, error, loading, fetchMore }) => {
                     if (loading) {
                         return 'loading...';
@@ -106,18 +108,18 @@ class IndexEleven extends Component {
                 </Grid>
                 <Grid container direction="row" alignItems="stretch">
                     <Grid item style={{width:'80%'}}>
-                    <AutoSuggest handleClick={this.handleClick} value={inputvalue} sugges={data.languages}/>
+                    <AutoSuggest handleClick={this.handleClick} value={inputvalue} sugges={data.values}/>
                     </Grid>
                     <Grid item style={{width:'20%'}}>
                     <Button size="medium" variant="contained" color="primary" style={{height:'58%',top:16}}>
-                        <AddIcon onClick={this.handleClick1} />
+                        <AddIcon onClick={(e)=>this.handleClick1(e,data.values)} />
                     </Button>
                     </Grid>
                 </Grid>
                 <Grid container direction="row" justify="flex-start" alignItems="center" spacing={1}>
                     {inputArr.length !== 0 && inputArr.map((value, index) =>
                         <Grid item>
-                        <Chip key={`${index}`} label={value} onDelete={this.handleDelete()} />
+                            {inputArr && inputArr.map((lang, i) => <Chip key={`${i}`} label={lang} onDelete={this.handleDelete(i)} />)}
                         </Grid>
                         )
                     }
@@ -129,9 +131,10 @@ class IndexEleven extends Component {
         );
     }
 }
-const GET_LANGUAGES = gql`
+const GET_VALUES = gql`
 {
-  languages{
+  values{
+    id
     label
   }
 }

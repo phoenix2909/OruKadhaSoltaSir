@@ -33,7 +33,6 @@ class IndexThree extends Component {
         currentCount: event.target.value.length,
         sm_intro : event.target.value
       });
-      console.log(event)
     }
     this.props.handleChange('sm_intro',event);
   };
@@ -42,8 +41,7 @@ class IndexThree extends Component {
     const { sm_intro } = this.state;
     return (
       <Grid container direction="column" className={classes.root}>
-        {console.log(this.state.sm_intro)
-        }
+        
         <Grid item>
           <TextFieldLabel text="One word or a sentence that you would give for yourself" />
         </Grid>

@@ -22,32 +22,17 @@ const styles = theme => ({
   container: {
     position: 'relative',
   },
-  suggestionsContainerOpen: {
-    position: 'absolute',
-    zIndex: 1,
-    marginTop: theme.spacing.unit,
-    left: 0,
-    right: 0,
-  },
-  suggestion: {
-    display: 'block',
-  },
-  suggestionsList: {
-    margin: 0,
-    padding: 0,
-    listStyleType: 'none',
-  },
   divider: {
     height: theme.spacing.unit * 2,
   },
 });
 
-export class IndexFive extends Component {
+class IndexFive extends Component {
   constructor(props) {
     super(props);
     // Don't call this.setState() here!
     this.state = {
-       inputArr:[], inputvalue: null, value: '',
+      inputArr: props.states.inputArr, inputvalue: null, value: '', selected_lang_arr:props.states.selected_lang_arr,
       suggestions: []
     };
     this.handleClick = this.handleClick.bind(this)
@@ -61,15 +46,19 @@ export class IndexFive extends Component {
     this.setState({
       inputvalue
     });
-  }
-  handleClick1 = (e) => {
-    let { inputArr, inputvalue } = this.state;
+  } 
+  handleClick1 = (e,languagesList) => {
+    let { inputArr, inputvalue, selected_lang_arr } = this.state;
     if(inputvalue !== '')
     {
+    let languageMutateList = languagesList.filter(lang => lang.label === inputvalue).map(langu => langu.id)[0];
+    console.log(languageMutateList);
+      selected_lang_arr.push(languageMutateList);
+      console.log(selected_lang_arr);
       inputArr.push(inputvalue);
       inputvalue = "";
       this.setState({
-        inputArr, inputvalue
+        inputArr, inputvalue, selected_lang_arr:selected_lang_arr
       });
     }
 
@@ -106,7 +95,7 @@ export class IndexFive extends Component {
           </Grid>
           <Grid item style={{width:'20%'}}>
           <Button size="medium" variant="contained" color="primary" style={{height:'58%',top:16}}>
-            <AddIcon onClick={this.handleClick1} />
+            <AddIcon onClick={(e) => this.handleClick1(e,data.languages)} />
           </Button>
           </Grid>         
         </Grid>
@@ -125,6 +114,7 @@ const GET_LANGUAGES = gql `
 {
   languages{
     label
+    id
   }
 }
 `;

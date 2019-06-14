@@ -24,18 +24,27 @@ const styles = theme => ({
 class IndexSix extends Component {
     constructor(props) {
         super(props);
-        this.state = { maxCount: 360, currentCount: 0 };
+        this.state = { 
+            maxCount: 360, 
+            currentCount: 0,
+            project_abst: props.states.project_abst
+        };
         this.updateTextField = this.updateTextField.bind(this);
     }
 
     updateTextField = (event, value) => {
         if (event.target.value && event.target.value.length > 0) {
-            this.setState({ currentCount: event.target.value.length })
+            this.setState({ 
+                currentCount: event.target.value.length,
+                project_abst : event.target.value
+            })
         }
+        this.props.handleChange('project_abst',event)
     };
 
     render() {
         const { classes } = this.props;
+        const { project_abst} = this.state
         return (
             <Grid container className={classes.root}
                 direction="column"
@@ -52,10 +61,17 @@ class IndexSix extends Component {
                         placeholder="Eg: Project information"
                         margin="normal"
                         variant="outlined"
+                        value={project_abst}
                         rowsMax={5}
                         onChange={(e, v) => this.updateTextField(e, v)}
                         InputProps={{
-                            endAdornment: <Typography component="label" color="textSecondary" style={{ paddingLeft: 8, bottom: 0 }} >{this.state.currentCount + '/' + this.state.maxCount}</Typography>
+                            endAdornment: (
+                            <Typography
+                                component="label" 
+                                color="textSecondary" 
+                                style={{ paddingLeft: 8, bottom: 0 }} >
+                                {project_abst.length + '/' + this.state.maxCount}
+                            </Typography>)
                         }}
                         // eslint-disable-next-line
                         inputProps={{
