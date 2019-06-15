@@ -113,7 +113,7 @@ export class IndexTwelve extends Component {
     return (
       <div>
         <Grid item>
-          <TextFieldLabel text="Which denotes your economic status appropriately?" />
+          <TextFieldLabel text="What are your hobbies?" />
         </Grid>
         <Grid container direction="row" alignItems="stretch">
           <Grid item style={{ width: "80%" }}>

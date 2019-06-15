@@ -65,7 +65,7 @@ class HomeComp extends Component {
     this.state = {
       user_id: "50e21e38-d914-479f-a39e-fab882237063",
       profile_id : '',
-      step: 9,
+      step: 1,
       stateIndex:[
         {
           full_name:'',
@@ -92,10 +92,10 @@ class HomeComp extends Component {
           project_abst : ''
         },
         {
-          
+          course_id: null
         },
         {
-          
+          comp_date:''
         },
         {
           inputArr :[],
@@ -107,6 +107,9 @@ class HomeComp extends Component {
         {
           inputArr:[],
           selected_valuesArr : []
+        },
+        {
+          selected_HobbiesArr:[]
         }
       ],
       
@@ -329,6 +332,67 @@ class HomeComp extends Component {
         })
       return false 
     }
+    else if(this.state.step === 7)
+    {
+      await myClient.mutate({
+        mutation: gql`
+         mutation UpdateEducation($profile_id:String!,$course_id:Int) 
+        {
+          update_education(profile_id: $profile_id,course_id:$course_id) 
+          {
+            status
+            profile
+            {
+              id
+            }
+            message
+          }
+        }
+        `,
+        variables: {
+          "course_id": this.state.stateIndex[6]['course_id'],
+          "profile_id": this.state.profile_id
+        }
+      })
+        .then(data => {
+          console.log(data.data);
+          console.log(this.state);
+        })
+        .catch(err => {
+          console.log(err);
+        })
+      return false 
+    }
+    else if (this.state.step === 8) {
+      await myClient.mutate({
+        mutation: gql`
+         mutation UpdateEduCompDate($profile_id:String!,$comp_date:String) 
+        {
+          update_education_compdate(profile_id: $profile_id, comp_date: $comp_date) 
+          {
+            status
+            profile
+            {
+              id
+            }
+            message
+          }
+        }
+        `,
+        variables: {
+          "comp_date": this.state.stateIndex[7]['comp_date'],
+          "profile_id": this.state.profile_id
+        }
+      })
+        .then(data => {
+          console.log(data.data);
+          console.log(this.state);
+        })
+        .catch(err => {
+          console.log(err);
+        })
+      return false 
+    }
     else if (this.state.step === 9)
     {
       await myClient.mutate({
@@ -378,7 +442,38 @@ class HomeComp extends Component {
         }
         `,
         variables: {
-          "selected_valuesArr": this.state.stateIndex[8]['selected_valuesArr'],
+          "selected_valuesArr": this.state.stateIndex[10]['selected_valuesArr'],
+          "profile_id": this.state.profile_id
+        }
+      })
+        .then(data => {
+          console.log(data.data);
+          console.log(this.state);
+        })
+        .catch(err => {
+          console.log(err);
+        })
+      return false 
+    }
+    else if (this.state.step === 12)
+    {
+      await myClient.mutate({
+        mutation: gql`
+         mutation UpdateHobbies($profile_id:String!,$selected_hobbiesArr:[Int]) 
+        {
+          update_hobbies(profile_id: $profile_id, selected_hobbiesArr: $selected_hobbiesArr) 
+          {
+            status
+            profile
+            {
+              id
+            }
+            message
+          }
+        }
+        `,
+        variables: {
+          "selected_hobbiesArr": this.state.stateIndex[11]['selected_hobbiesArr'],
           "profile_id": this.state.profile_id
         }
       })
@@ -408,7 +503,8 @@ class HomeComp extends Component {
   render() {
     const { step } = this.state;
     const { classes } = this.props;
-
+    console.log(this.state);
+    
     let component = <p>Error: 404, page not found</p>;
     let button = "Next";
     switch (step) {

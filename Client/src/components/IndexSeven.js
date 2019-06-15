@@ -2,12 +2,13 @@ import React, { Component } from "react";
 import Engineer from "../images/engineer.png";
 import Artist from "../images/artist.png";
 import Tick from "../images/checked.png";
-
 import Grid from "@material-ui/core/Grid";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import { Paper, InputLabel } from "@material-ui/core";
 import TextFieldLabel from "./TextFieldLabel";
+import { Query } from 'react-apollo';
+import gql from 'graphql-tag';
 
 const selQb = (
   <div
@@ -56,15 +57,38 @@ class IndexSeven extends Component {
     super(props);
     this.state = {
       isEng: "",
-      isNonEng: ""
+      isNonEng: "",
+      course_id:props.states.course_id
     };
+    this.handleClick = this.handleClick.bind(this)
+    console.log(props.states);
   }
 
-  handleClick = isEng => {
+  handleClick = (isEng, course) => {  
     if (isEng) {
-      this.setState({ isEng: selQb, isNonEng: "" });
+      this.setState({
+        isEng: selQb,
+        isNonEng: "",
+        course_id: course[0].id
+      }, () => {
+          this.props.handleChange('course_id', {
+            target: {
+              value: this.state.course_id
+            }
+          });
+      });
     } else {
-      this.setState({ isEng: "", isNonEng: selQb });
+      this.setState({
+        isEng: "",
+        isNonEng: selQb,
+        course_id: course[1].id
+      }, () => {
+          this.props.handleChange('course_id', {
+            target: {
+              value: this.state.course_id
+            }
+          });
+      });
     }
   };
 
@@ -72,69 +96,99 @@ class IndexSeven extends Component {
     const { classes } = this.props;
     const { isEng, isNonEng } = this.state;
     return (
-      <Grid
-        container
-        className={classes.root}
-        direction="column"
-        justify="center"
-        alignItems="stretch"
+      <Query query={GET_COURSES}
+      fetchPolicy='network-only'
       >
-        <Grid item>
-          <TextFieldLabel text="What is your qualification?" />
-        </Grid>
+        {({ data, error, loading, fetchMore }) => {
+          
+          if (loading) {
+            return 'loading...';
+          }
+          if (error) {
+            return JSON.stringify(error);
+          }
+          return (            
+            <Grid
+              container
+              className={classes.root}
+              direction="column"
+              justify="center"
+              alignItems="stretch"
+            >
+              <Grid item>
+                <TextFieldLabel text="What is your qualification?" />
+              </Grid>
 
-        <Grid
-          item
-          container
-          justify="flex-start"
-          direction="row"
-          alignItems="center"
-          spacing={1}
-          style={{ marginTop: 8 }}
-        >
-          <Grid item>
-            <Paper
-              className={classes.paper}
-              onClick={this.handleClick.bind(this, true)}
-            >
-              {isEng}
-              <img
-                className={classes.img}
-                alt="engineering"
-                width="40px"
-                height="40px"
-                src={Engineer}
-              />
-              <Grid item style={{ textAlign: "center" }}>
-                <InputLabel className={classes.label}>Engineering</InputLabel>
+              <Grid
+                item
+                container
+                justify="flex-start"
+                direction="row"
+                alignItems="center"
+                spacing={1}
+                style={{ marginTop: 8 }}
+              >
+              <Grid item>
+                <Paper
+                  className={classes.paper}
+                    onClick={(e) => {
+                      this.handleClick(true, data.courses)
+                    }
+                    }
+                >
+                {isEng}
+                <img
+                  className={classes.img}
+                  alt="engineering"
+                  width="40px" 
+                  height="40px"
+                  src={Engineer}
+                />
+                <Grid item style={{ textAlign: "center" }}>
+                  <InputLabel className={classes.label}>{data.courses[0].label}</InputLabel>
+                </Grid>
+                </Paper>
+                </Grid>
+                <Grid item>
+                  <Paper
+                    className={classes.paper}
+                    onClick={(e) => {
+                      this.handleClick(false,data.courses)}
+                    }
+                  >
+                  {isNonEng}
+                  <img
+                    className={classes.img}
+                    alt="non-engineering"
+                    width="40px"
+                    height="40px"
+                    src={Artist}
+                  />
+                  <Grid item style={{ textAlign: "center" }}>
+                    <InputLabel className={classes.label}>
+                      {data.courses[1].label}                
+                    </InputLabel>
+                  </Grid>
+                  </Paper>
+                </Grid>
               </Grid>
-            </Paper>
-          </Grid>
-          <Grid item>
-            <Paper
-              className={classes.paper}
-              onClick={this.handleClick.bind(this, false)}
-            >
-              {isNonEng}
-              <img
-                className={classes.img}
-                alt="non-engineering"
-                width="40px"
-                height="40px"
-                src={Artist}
-              />
-              <Grid item style={{ textAlign: "center" }}>
-                <InputLabel className={classes.label}>
-                  Non-Engineering
-                </InputLabel>
-              </Grid>
-            </Paper>
-          </Grid>
-        </Grid>
-      </Grid>
+            </Grid>
+          )
+        }}
+      </Query> 
     );
   }
 }
+
+const GET_COURSES = gql`
+{
+  courses{
+    id
+    label
+    extra_info
+  }
+}
+`;
 
 IndexSeven.propTypes = {
   classes: PropTypes.object.isRequired

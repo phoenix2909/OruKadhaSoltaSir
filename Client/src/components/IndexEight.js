@@ -12,22 +12,38 @@ const styles = theme => ({
 
 class IndexEight extends Component {
 
-    // constructor(props) {
-    //     super(props);        
-    // }
+    constructor(props) {
+        super(props);        
+        this.state = {
+            comp_date:props.states.comp_date
+        }
+        this.handleChange = this.handleChange.bind(this)
+
+    }
+     handleChange = (input) => {
+        this.setState({
+            'comp_date': JSON.stringify(input),
+        });
+        this.props.handleChange('comp_date', {
+            target: {
+                value:input 
+            }
+        });
+        
+    };
 
     render() {
         const {classes}= this.props;
         return (
             <Grid container className={classes.root} 
-                direction="column"
-                justify="center"
-                alignItems="stretch">
+            direction="column"
+            justify="center"
+            alignItems="stretch">
                 <Grid item>
                     <TextFieldLabel text="When did you complete your education ?"/> 
                 </Grid>
                 <Grid item>
-                    <DateComp/>
+                    <DateComp onChange = {(e) => {this.handleChange(e)}} comp_date= {this.state.comp_date}/>
                 </Grid>
             </Grid>                   
         );

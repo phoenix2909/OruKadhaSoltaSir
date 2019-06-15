@@ -66,7 +66,7 @@ class IndexNine extends Component {
     }
 
     handleDelete = i => () => {
-        this.setState(state => {
+        this.setState(() => {
             const { inputArr } = this.state
             inputArr.splice(i, 1);
             return { inputArr };
