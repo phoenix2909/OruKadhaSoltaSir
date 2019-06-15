@@ -345,7 +345,7 @@ const RootQueries = new GraphQLObjectType({
         hobbies:{
             type: new GraphQLList(MasterType),
             resolve(){
-                return models.master_hobbies.findAll({attributes:['id',['hobby_name','name'],['hobby_name','extra_info']]})
+                return models.master_hobbies.findAll({attributes:['id',['hobby_name','label'],['hobby_name','extra_info']]})
                     .then((hobbies)=>{
                         return JSON.parse(JSON.stringify(hobbies));
                     });
