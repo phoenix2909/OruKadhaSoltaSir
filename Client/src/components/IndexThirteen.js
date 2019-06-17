@@ -81,15 +81,33 @@ class IndexThirteen extends Component {
       value: 0,
       maxCount: 400,
       currentCount: 0,
-      gender: "Male"
+      gender: props.states.gender,
+      about:props.states.about,
+      age:props.states.age,
+      father_occupation:props.states.father_occupation,
+      eco_status:props.states.eco_status,
     };
   }
 
-  handleChange = (event, value) => {
-    this.setState({ value });
+  handleTextChange = (event,input)=>{
+    this.setState({
+      [input]: event.target.value,
+    });
+    this.props.handleChange(input, event);
+  };
+
+  handleChange = (event, input) => {
+    this.setState({ [input]:event.target.value },()=>{
+      this.props.handleChange(input,event)
+    });
   };
   handleChooseGender = (event, value) => {
-    this.setState({ gender: value });
+    this.setState({ gender: Number(value) });
+    this.props.handleChange('gender',{
+      target:{
+        value:Number(value)
+      }
+    })
   };
   updateTextField = (event, value) => {
     if (event.target.value && event.target.value.length > 0) {
@@ -99,7 +117,11 @@ class IndexThirteen extends Component {
 
   render() {
     const { classes } = this.props;
-    const { value } = this.state;
+    const { gender } = this.state;
+    function valuetext(value) {
+      return `${value}years`;
+    }
+
     return (
       <Grid
         container
@@ -113,12 +135,12 @@ class IndexThirteen extends Component {
         </Grid>
         <Grid item>
           <TextField
-            id="required"
             margin="normal"
             variant="outlined"
+            value={this.state.father_occupation}
             style={{ width: "100%" }}
-            onChange={e => {
-              this.handleChange(e);
+            onChange={(e) => {
+              this.handleTextChange(e,'father_occupation');
               this.updateTextField(e);
             }}
           />
@@ -129,15 +151,21 @@ class IndexThirteen extends Component {
         <Grid item container justify="center" alignItems="center">
           <Grid item style={{ width: "98%" }}>
             <Slider
-              value={value}
               step={50}
-              aria-labelledby="slider-icon"
-              onChange={this.handleChange}
-              classes={{
-                container: classes.slider,
-                thumbIconWrapper: classes.thumbIconWrapper,
-                track: classes.track
-              }}
+              aria-labelledby="discrete-slider-always"
+              onChange={(e, value) => {
+                this.setState({
+                  age: Number(value)
+                });
+                this.props.handleChange('eco_status', {
+                  target:
+
+                    {
+                      value:Number(value)
+                    }
+                  
+                })
+              }}     
             />
             <Grid
               container
@@ -169,14 +197,23 @@ class IndexThirteen extends Component {
         <Grid item container justify="center" alignItems="center">
           <Grid item style={{ width: "98%" }}>
             <Slider
-              value={value}
+              min = {16}
+              max = {60}
+              defaultValue={40}
               step={1}
-              aria-labelledby="slider-icon"
-              onChange={this.handleChange}
-              classes={{
-                container: classes.slider,
-                thumbIconWrapper: classes.thumbIconWrapper,
-                track: classes.track
+              getAriaValueText={valuetext}
+              aria-labelledby="discrete-slider-always"
+              valueLabelDisplay="on"
+              onChange={(e,value) => {
+                this.setState({
+                  age:value
+                });
+                this.props.handleChange('age',{
+                  target:
+                  {
+                    value
+                  }
+              })
               }}
             />
             <Grid
@@ -215,17 +252,20 @@ class IndexThirteen extends Component {
             onChange={this.handleChooseGender}
           >
             <FormControlLabel
-              value="female"
-              control={<Radio className={classes.label} />}
-              label="Female"
-            />
-            <FormControlLabel
-              value="male"
+              checked={gender === 1 }
+              value={1}
               control={<Radio className={classes.label} />}
               label="Male"
             />
             <FormControlLabel
-              value="other"
+              checked={gender === 2 }
+              value={2}
+              control={<Radio className={classes.label} />}
+              label="Female"
+            />
+            <FormControlLabel
+            checked={gender === 3 }
+              value={3}
               control={<Radio className={classes.label} />}
               label="Other"
             />
@@ -238,11 +278,15 @@ class IndexThirteen extends Component {
           <TextField
             id="required"
             multiline={true}
-            placeholder="Eg: Project information"
+            placeholder="Eg: Your Story"
             margin="normal"
+            value={this.state.about}
             variant="outlined"
             style={{ width: "100%" }}
-            onChange={(e, v) => this.updateTextField(e, v)}
+            onChange={(e, v) => {
+              this.handleTextChange(e,'about')
+              this.updateTextField(e, v)
+            }}
             InputProps={{
               endAdornment: (
                 <Typography
@@ -251,7 +295,7 @@ class IndexThirteen extends Component {
                   style={{ paddingLeft: 8 }}
                 >
                   {" "}
-                  {this.state.currentCount}/{this.state.maxCount}
+                  {this.state.about.length}/{this.state.maxCount}
                 </Typography>
               )
             }}

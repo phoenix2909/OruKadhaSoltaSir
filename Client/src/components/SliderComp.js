@@ -32,12 +32,13 @@ class SliderComp extends React.Component {
     value: 50
   };
 
-  handleChange = (event, value) => {
+  handleChange = (event, value, currentSkill) => {
+    
     this.setState({ value });
   };
 
   render() {
-    const { classes } = this.props;
+    const { classes,currentSkill } = this.props;
     const { value } = this.state;
 
     return (
@@ -54,12 +55,9 @@ class SliderComp extends React.Component {
               value={value}
               step={50}
               aria-labelledby="slider-icon"
-              onChange={this.handleChange}
-              classes={{
-                container: classes.slider,
-                thumbIconWrapper: classes.thumbIconWrapper,
-                track: classes.track
-              }}
+              onChange={(e,value) => {
+                this.handleChange(e, value, currentSkill)}
+              }
             />
             <Grid container justify="space-between" align-items="center">
               <Grid item>

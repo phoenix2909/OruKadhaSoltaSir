@@ -65,13 +65,13 @@ class HomeComp extends Component {
     this.state = {
       user_id: "50e21e38-d914-479f-a39e-fab882237063",
       profile_id : '',
-      step: 1,
+      step: 10,
       stateIndex:[
         {
           full_name:'',
           mobile:'',
           mobileErr:null,
-          email:'sowrab@gmail.com',
+          email:'sowrabh@gmail.com',
           emailErr:null
         },
         {
@@ -102,14 +102,24 @@ class HomeComp extends Component {
           selected_skillsArr:[]
         },
         {
-          
+          rated_skills:[{
+            id:'',
+            rating:''
+          }]
         },
         {
           inputArr:[],
           selected_valuesArr : []
         },
         {
-          selected_HobbiesArr:[]
+          selected_hobbiesArr:[]
+        },
+        {
+          age: '',
+          father_occupation: "",
+          eco_status: '',
+          gender: '',
+          about: ""
         }
       ],
       
@@ -180,7 +190,6 @@ class HomeComp extends Component {
     }
     else if (this.state.step === 2)
     {
-      console.log(myClient);
       await myClient.mutate({
         mutation: gql`
         mutation UpdateProfilePic($photo:String, $profile_id:String!) 
@@ -424,6 +433,37 @@ class HomeComp extends Component {
         })
       return false 
     }
+    else if (this.state.step === 10)
+    {
+      await myClient.mutate({
+        mutation: gql`
+         mutation UpdateSkillsRating($profile_id:String!,$rated_skills:[rated_skills]) 
+        {
+          update_skills_rating(profile_id: $profile_id, rated_skills: $rated_skills) 
+          {
+            status
+            profile
+            { 
+              id
+            }
+            message
+          }
+        }
+        `,
+        variables: {
+          "rated_skills": this.state.stateIndex[9]['rated_skills'],
+          "profile_id": this.state.profile_id
+        }
+      })
+        .then(data => {
+          console.log(data.data);
+          console.log(this.state);
+        })
+        .catch(err => {
+          console.log(err);
+        })
+      return false 
+    }
     else if (this.state.step === 11)
     {
       await myClient.mutate({
@@ -474,6 +514,41 @@ class HomeComp extends Component {
         `,
         variables: {
           "selected_hobbiesArr": this.state.stateIndex[11]['selected_hobbiesArr'],
+          "profile_id": this.state.profile_id
+        }
+      })
+        .then(data => {
+          console.log(data.data);
+          console.log(this.state);
+        })
+        .catch(err => {
+          console.log(err);
+        })
+      return false 
+    }
+    else if (this.state.step === 13)
+    {
+      await myClient.mutate({
+        mutation: gql`
+         mutation UpdatePersonalInfo($profile_id:String!,$about:String,$father_occupation:String,$eco_status:Int,$age:Int,$gender:Int) 
+        {
+          update_personal_info(profile_id: $profile_id, about: $about, father_occupation:$father_occupation,eco_status:$eco_status,age:$age,gender:$gender) 
+          {
+            status
+            profile
+            {
+              id
+            }
+            message
+          }
+        }
+        `,
+        variables: {
+          "age": this.state.stateIndex[12]['age'],
+          "father_occupation": this.state.stateIndex[12]['father_occupation'],
+          "eco_status": this.state.stateIndex[12]['eco_status'],
+          "gender": this.state.stateIndex[12]['gender'],
+          "about": this.state.stateIndex[12]['about'],
           "profile_id": this.state.profile_id
         }
       })

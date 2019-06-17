@@ -4,7 +4,8 @@ import TextFieldLabel from "./TextFieldLabel";
 import { withStyles } from "@material-ui/core/styles";
 import PropTypes from "prop-types";
 import SliderComp from "./SliderComp";
-import skills from "./SkillsObj";
+import { Query } from 'react-apollo';
+import gql from 'graphql-tag';
 
 const styles = theme => ({
   root: {
@@ -17,18 +18,32 @@ class IndexTen extends Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      SkillsObj: skills.SkillsObj,
       value: 0
     };
   }
 
-  handleChange = (event, value) => {
-    this.setState({ value });
+  handleChange = () => {
+    
   };
 
   render() {
     const { classes } = this.props;
     return (
+      <Query query={GET_SKILLS} variables={
+        {
+          id: "5b1092e4-895f-48c4-9796-f254aa59178f"
+        }
+      }>
+        {({ data, error, loading, fetchMore }) => {
+          if (loading) {
+            return 'loading...';
+          }
+          if (error) {
+            return JSON.stringify(error);
+          }
+          console.log(data.profile.skills);
+          return (
+
       <Grid
         container
         className={classes.root}
@@ -49,19 +64,35 @@ class IndexTen extends Component {
           spacing={2}
           style={{ marginTop: 8 }}
         >
-          {this.state.SkillsObj.map((skill, index) => {
+              {data.profile.skills.map((skill, index) => {
             return (
               <Grid item style={{ width: "100%" }} key={index}>
-                <SliderComp skillName={skill.label} />
+                <SliderComp skillName={skill.skill.label} data = {skill.skill} onChange={this.handleChange}/>
               </Grid>
             );
           })}
         </Grid>
       </Grid>
+          )
+        }}
+      </Query> 
     );
   }
 }
-
+const GET_SKILLS = gql `
+query GET_SKILLS($id:String) {
+  profile(id:$id)
+  {
+    skills{
+      skill
+      {
+        id
+        label
+      }
+    }
+  }
+}
+`;
 IndexTen.propTypes = {
   classes: PropTypes.object.isRequired
 };

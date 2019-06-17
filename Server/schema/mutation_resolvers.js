@@ -1,4 +1,5 @@
 const models = require('../models')
+const asyncEach = require('async-each')
 
 module.exports = {
     update_basic_info: (args) => {

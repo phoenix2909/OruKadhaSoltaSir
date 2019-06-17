@@ -10,6 +10,8 @@ import { withStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import SearchIcon from "@material-ui/icons/Search";
 import hobbies from "./HobbiesObj";
+import { Query } from 'react-apollo';
+import gql from 'graphql-tag';
 
 const selQb = (
   <div
@@ -70,9 +72,9 @@ export class IndexTwelve extends Component {
     this.state = {
       maxCount: 50,
       currentCount: 0,
-      selectedHobby: [],
-      HobbiesObj: hobbies.HobbiesObj,
-      select: ""
+      selected_hobbiesArr: props.states.selected_hobbiesArr,
+      HobbiesObj: '',
+      select: "",
     };
     this.updateTextField = this.updateTextField.bind(this);
     this.handleClick = this.handleClick.bind(this);
@@ -83,16 +85,14 @@ export class IndexTwelve extends Component {
       this.setState({ currentCount: event.target.value.length });
     }
   };
-  handleClick = event => {
-    this.setState((state, props) => ({
-      HobbiesObj: state.HobbiesObj.map((hobby, index) => {
-        var temp = hobby;
-        if (index === event) {
-          temp.isSelected = !temp.isSelected;
-        }
-        return temp;
-      })
-    }));
+  handleClick = hobby => {
+    let { selected_hobbiesArr } = this.state;
+    const indexOf = selected_hobbiesArr.indexOf(hobby.id);
+    selected_hobbiesArr.indexOf(hobby.id) === -1 ? selected_hobbiesArr.push(hobby.id):  selected_hobbiesArr.splice(indexOf, 1)
+    this.setState({
+      selected_hobbiesArr
+    })
+    
   };
   handleChange = e => {
     var empty = e.target.value.length <= 0 ? true : false;
@@ -102,7 +102,7 @@ export class IndexTwelve extends Component {
     });
     if (!empty) {
       this.setState({
-        HobbiesObj: temporary
+        selected_hobbiesArr: temporary
       });
     } else {
       this.setState({ HobbiesObj: hobbies.HobbiesObj });
@@ -110,7 +110,25 @@ export class IndexTwelve extends Component {
   };
   render() {
     const { classes } = this.props;
+    const { selected_hobbiesArr } = this.state;
+    console.log(selected_hobbiesArr);
     return (
+      <Query query={GET_HOBBIES} >
+        {({ data, error, loading, fetchMore }) => {
+          if (loading) {
+            return 'loading...';
+          }
+          if (error) {
+            return JSON.stringify(error);
+          }
+          data.hobbies = data.hobbies.map(hubb => {
+            return {
+              ...hubb,
+              ...hobbies.HobbiesObj.filter(hob => hob.name  === hubb.label)[0]  
+            }
+          })
+          
+          return (
       <div>
         <Grid item>
           <TextFieldLabel text="What are your hobbies?" />
@@ -147,34 +165,48 @@ export class IndexTwelve extends Component {
           my="auto"
           spacing={1}
         >
-          {this.state.HobbiesObj.map((hobby, index) => (
+ 
+        {data.hobbies.map((hobby, index) => (
             <Grid item key={index}>
-              <Paper
-                className={classes.paper}
-                count={index}
-                onClick={this.handleClick.bind(this, index)}
-              >
-                {hobby.isSelected ? selQb : ""}
-                <img
-                  className={classes.img}
-                  alt={hobby.name}
-                  width="40px"
-                  height="40px"
-                  src={hobby.image}
-                />
-                <Grid item style={{ textAlign: "center" }}>
-                  <InputLabel className={classes.label}>
-                    {hobby.name}
-                  </InputLabel>
+                <Paper
+                  className={classes.paper}
+                  count={index}
+                  onClick={this.handleClick.bind(this, hobby)}
+                  >
+
+                  { selected_hobbiesArr.indexOf(hobby.id) !== -1 ? selQb : ""}
+                  <img
+                    className={classes.img}
+                    alt={hobby.label}
+                    width="40px"
+                    height="40px"
+                    src={hobby.image}
+                  />
+                  <Grid item style={{ textAlign: "center" }}>
+                    <InputLabel className={classes.label}>
+                      {hobby.label}
+                      </InputLabel>
+                    </Grid>
+                  </Paper>
                 </Grid>
-              </Paper>
-            </Grid>
           ))}
         </Grid>
       </div>
+          )
+        }}
+      </Query>    
     );
   }
 }
+
+const GET_HOBBIES = gql`
+{
+  hobbies{
+    id
+    label
+  }
+}
+`;
 
 IndexTwelve.propTypes = {
   classes: PropTypes.object.isRequired
