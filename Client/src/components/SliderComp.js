@@ -29,16 +29,35 @@ const styles = {
 
 class SliderComp extends React.Component {
   state = {
-    value: 50
+    value: 50,
+    rated_skills:[{
+      rating:'',
+      id:''
+    },],
   };
 
-  handleChange = (event, value, currentSkill) => {
-    
-    this.setState({ value });
-  };
+  handleChange = (event, value, data) => {  
+    console.log(data)  
+    let skill_rating = []
+    skill_rating.push({
+      id:data.id,
+      rating:value 
+    })
+    this.setState({
+      value,
+      rated_skills:skill_rating
+      });
 
+      console.log(this.state.rated_skills);
+      this.props.onChange(this.state.rated_skills,event)
+  };
+  componentDidMount() {
+    this.setState({
+      skill_rating: this.state.skill_rating
+    });
+  }
   render() {
-    const { classes,currentSkill } = this.props;
+    const { classes,data } = this.props;
     const { value } = this.state;
 
     return (
@@ -52,11 +71,12 @@ class SliderComp extends React.Component {
           <Paper className={classes.paper}>
             <Typography id="slider-icon">{this.props.skillName}</Typography>
             <Slider
-              value={value}
+              draggable
               step={50}
+              value={value}
               aria-labelledby="slider-icon"
               onChange={(e,value) => {
-                this.handleChange(e, value, currentSkill)}
+                this.handleChange(e, value, data)}
               }
             />
             <Grid container justify="space-between" align-items="center">

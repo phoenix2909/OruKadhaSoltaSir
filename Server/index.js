@@ -10,6 +10,14 @@ const expressGraphQL = require('express-graphql');
 const schema = require('./schema/schema');
 const cors = require('cors');
 
+const test = require('./schema/mutation_resolvers');
+const a = test.update_skills_rating({
+    profile_id: '5b1092e4-895f-48c4-9796-f254aa59178f',
+    rated_skills: [{ id: 1, rating: 900 }, { id: 2, rating: 900 }]
+}).then(data => {
+    console.log(data);
+})
+
 //Requring authentication middleware
 const auth = require('./routes/utils/authMiddleware');
 

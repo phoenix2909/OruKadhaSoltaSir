@@ -65,7 +65,7 @@ class HomeComp extends Component {
     this.state = {
       user_id: "50e21e38-d914-479f-a39e-fab882237063",
       profile_id : '',
-      step: 10,
+      step: 1,
       stateIndex:[
         {
           full_name:'',
@@ -105,7 +105,7 @@ class HomeComp extends Component {
           rated_skills:[{
             id:'',
             rating:''
-          }]
+          }],
         },
         {
           inputArr:[],
@@ -128,10 +128,10 @@ class HomeComp extends Component {
 
   handleStatesUpdate=(input,event) =>{
     let { stateIndex,step } = this.state;
-    stateIndex[step-1][input] = event.target.value;
-    this.setState({
-       stateIndex:stateIndex
-    });
+    let theObject = stateIndex[step-1];
+    theObject[input] = event.target.value;
+    stateIndex[step-1] = theObject
+    this.setState({ stateIndex });
   }
 
   // Proceed to next step
@@ -179,9 +179,10 @@ class HomeComp extends Component {
           })
         }
         this.setState({
-          profile_id: data.data.update_basic_info.profile.id,
+          profile_id: data.data.update_basic_info.profile.id
         });
-        console.log(this.state.profile_id);        
+        console.log(this.state.profile_id);      
+
       })
       .catch(err => {
         console.log(err);
@@ -239,7 +240,6 @@ class HomeComp extends Component {
         }
       })
         .then(data => {
-          // console.log(this.state.profile_id);
           console.log(this.state);          
         })
         .catch(err => {
@@ -578,7 +578,6 @@ class HomeComp extends Component {
   render() {
     const { step } = this.state;
     const { classes } = this.props;
-    console.log(this.state);
     
     let component = <p>Error: 404, page not found</p>;
     let button = "Next";
@@ -688,6 +687,7 @@ class HomeComp extends Component {
             <IndexTen 
               handleChange={this.handleStatesUpdate}
               states={this.state.stateIndex[step - 1]} 
+              profile_id={this.state.profile_id}
             />
           </Grid>
         );

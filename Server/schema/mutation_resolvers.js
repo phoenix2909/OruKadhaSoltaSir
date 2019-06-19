@@ -1,10 +1,8 @@
 const models = require('../models')
-const asyncEach = require('async-each')
-
+const asyncEach = require('async/each');
 module.exports = {
     update_basic_info: (args) => {
         const { profile_id, user_id, full_name, mobile } = args;
-        console.log(args)
         if (profile_id) {
             if (user_id && full_name && mobile) {
                 //Updating the basic info
@@ -319,30 +317,65 @@ module.exports = {
     },
 
     update_skills_rating : args => {
-        let { profile_id, rated_skills } = args
-
-        if (profile_id, rated_skills) {
-           return asyncEach(rated_skills, (rated_skill, callback) => {
-               return models.profile_skills.update({
-                    skill_rating: rated_skill.rating
+            const { profile_id, rated_skills } = args;
+            const methods = rated_skills.map(skill => models.profile_skills.update({
+                                        skill_rating:skill.rating,
                 }, {
-                        returning: true,
-                        where: { skill_id: rated_skill.id, profile_id }
-                    }).then(([affectedRow, [skills]]) => {
-                        callback();
-                    }).catch((err) => {
-                        callback(err);
-                    })
-            }, (err) => {
-                if (err) {
-                    return { message: 'Internal Server Error', status: false }
-                } else {
-                    return { message: 'Updated Successfully', status: true }
-                }
+                    returning:true,
+                    where:{
+                        skill_id:skill.id,
+                        profile_id,
+                    }
+                }));
+            
+            return Promise.all(methods).then(data => {
+                return { message: 'Updated Successfully', status: true }
             })
-        } else {
-            return{ message: 'Bad request', status: false }
-        }
+            .catch(err => {
+                console.log(err);
+                return { message: 'Internal Server Error', status: false }
+            })
+            // return asyncEach (rated_skills, (currentSkill, callback) => {
+                
+            //     return models.profile_skills.update({
+            //         skill_rating:currentSkill.rating,
+            //     }, {
+            //         returning:true,
+            //         where:{
+            //             skill_id:currentSkill.id,
+            //             profile_id,
+            //         }
+            //     }).then(updatedSkillResp => {
+            //         callback('success',null);
+            //     })
+            //     .catch(updatedSkillErr => {
+            //         callback('error',updatedSkillErr)
+            //     })
+            // }, (message, data) => {
+            //     if(message === 'success') {
+            //         return ({ message: 'Updated Successfully', status: true })
+            //     } else {
+            //         return ({ message: 'Internal Server Error', status: false })
+            //     }
+            // })
+            // asyncEach(rated_skills, (rated_skill, callback) => {
+            //    return models.profile_skills.update({
+            //         skill_rating: rated_skill.rating
+            //     }, {
+            //             returning: true,
+            //             where: { skill_id: rated_skill.id, profile_id }
+            //         }).then(([affectedRow, [skills]]) => {
+            //             callback();
+            //         }).catch((err) => {
+            //             callback(err);
+            //         })
+            // }, (err) => {
+            //     if (err) {
+            //         return JSON.parse(JSON.stringify({ message: 'Internal Server Error', status: false }))
+            //     } else {
+            //         return JSON.parse(JSON.stringify({ message: 'Updated Successfully', status: true }))
+            //     }
+            // })
     },
 
     update_values : args => {

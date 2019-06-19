@@ -18,12 +18,35 @@ class IndexTen extends Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      value: 0
+      value: 0,
+      rated_skills:props.states.rated_skills,
+      all_skills: []
     };
+    this.handleChange = this.handleChange.bind(this)
   }
-
-  handleChange = () => {
-    
+ updateOrInsertSkills= (skillarray, _skills) => {
+  let index = _skills.findIndex(e => skillarray[0].id === e.id);
+  if (index >= 0) {
+    _skills[index] = skillarray[0]
+  } else {
+    _skills.push(skillarray[0])
+  }
+  return _skills
+}
+  handleChange = (rated_skills,event) => {
+    let all_skills = this.updateOrInsertSkills(rated_skills,this.state.all_skills)
+    console.info('ALL SKILLS',all_skills, this.state.all_skills)
+    this.setState({
+      rated_skills,
+      all_skills
+    }, ()  => {
+        this.props.handleChange('rated_skills', {
+          target:
+          {
+            value: this.state.all_skills
+          }
+        });
+    })
   };
 
   render() {
@@ -31,7 +54,7 @@ class IndexTen extends Component {
     return (
       <Query query={GET_SKILLS} variables={
         {
-          id: "5b1092e4-895f-48c4-9796-f254aa59178f"
+          id: this.props.profile_id
         }
       }>
         {({ data, error, loading, fetchMore }) => {
@@ -41,8 +64,9 @@ class IndexTen extends Component {
           if (error) {
             return JSON.stringify(error);
           }
-          console.log(data.profile.skills);
+          console.log(data);
           return (
+            
 
       <Grid
         container

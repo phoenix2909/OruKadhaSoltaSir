@@ -255,8 +255,7 @@ const okssMutations = new GraphQLObjectType({
                 }
             },
             resolve(parentValues,args){
-                console.log(args);
-                return update_skills_rating(args)                
+                return update_skills_rating(args);
             }
         },
 

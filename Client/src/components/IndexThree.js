@@ -27,7 +27,6 @@ class IndexThree extends Component {
   }
 
   updateTextField = (event, value) => {
-    console.log();
     if (event.target.value && event.target.value.length > 0) {
       this.setState({ 
         currentCount: event.target.value.length,
