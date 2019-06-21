@@ -31,16 +31,15 @@ class SliderComp extends React.Component {
   state = {
     value: 50,
     rated_skills:[{
-      rating:'',
+      rating:50,
       id:''
     },],
   };
 
-  handleChange = (event, value, data) => {  
-    console.log(data)  
-    let skill_rating = []
+  handleChange = (event, value, data,id) => {  
+    let skill_rating = [];
     skill_rating.push({
-      id:data.id,
+      id,
       rating:value 
     })
     this.setState({
@@ -48,7 +47,6 @@ class SliderComp extends React.Component {
       rated_skills:skill_rating
       });
 
-      console.log(this.state.rated_skills);
       this.props.onChange(this.state.rated_skills,event)
   };
   componentDidMount() {
@@ -59,7 +57,6 @@ class SliderComp extends React.Component {
   render() {
     const { classes,data } = this.props;
     const { value } = this.state;
-
     return (
       <Grid
         container
@@ -76,7 +73,7 @@ class SliderComp extends React.Component {
               value={value}
               aria-labelledby="slider-icon"
               onChange={(e,value) => {
-                this.handleChange(e, value, data)}
+                this.handleChange(e, value, data,this.props.id)}
               }
             />
             <Grid container justify="space-between" align-items="center">

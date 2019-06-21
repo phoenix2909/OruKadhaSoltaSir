@@ -53,9 +53,7 @@ class IndexNine extends Component {
         let { inputArr, inputvalue, selected_skillsArr } = this.state;
         if (inputvalue !== '') {
             let skillsMutateList = skillsList.filter(lang => lang.label === inputvalue).map(langu => langu.id)[0];
-            console.log(skillsMutateList);
             selected_skillsArr.push(skillsMutateList);
-            console.log(selected_skillsArr);
             inputArr.push(inputvalue);
             inputvalue = "";
             this.setState({
@@ -91,11 +89,11 @@ class IndexNine extends Component {
             justify="center"
             alignItems="stretch">
                 <Grid item>
-                    <TextFieldLabel text="What are your skills ?"/>
+                    <TextFieldLabel text="What are your skills ?" />
                 </Grid>
                 <Grid container direction="row" alignItems="stretch">
                     <Grid item style={{width:'80%'}}>
-                    <AutoSuggest handleClick={this.handleClick} value={inputvalue} sugges={data.skills}/>
+                    <AutoSuggest handleClick={this.handleClick} value={inputvalue} sugges={data.skills} required="required"/>
                     </Grid>
                     <Grid item style={{width:'20%'}}>
                     <Button size="medium" variant="contained" color="primary" style={{height:'58%',top:16}}>

@@ -10,14 +10,14 @@ export default class DragAndDrop extends React.Component {
     super(props);
 
     this.state = {
-      uploadedFile: null,
+      uploadedFile: props.uploadedFile,
       uploadedFileCloudinaryUrl: ''
     };
   }
 
   onImageDrop(files) {
     this.setState({
-      uploadedFile: files[0]
+      uploadedFile: URL.createObjectURL(files[0])
     });
 
     this.handleImageUpload(files[0]);

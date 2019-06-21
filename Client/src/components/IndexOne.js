@@ -3,7 +3,6 @@ import TextField from '@material-ui/core/TextField';
 
 import Grid from '@material-ui/core/Grid';
 import {withStyles} from '@material-ui/core';
-import {ApolloConsumer,} from 'react-apollo'
 
 const styles=theme =>({
   root:{
@@ -46,14 +45,14 @@ class IndexOne extends Component {
     
 
     return (
-      <ApolloConsumer >
-        {allMyquery => <Grid container direction="column" justify="center" alignItems="stretch" className={classes.root}>
+        <Grid container direction="column" justify="center" alignItems="stretch" className={classes.root}>
           <Grid item className={classes.textFieldContainer}>
             <TextField
               className={classes.textField}
               label="What's your name ?"
               margin="normal"
               variant="outlined"
+              required={true}
               value={this.state.full_name}
               onChange={this.handleChange('full_name')}
             />
@@ -65,6 +64,7 @@ class IndexOne extends Component {
               margin="normal"
               variant="outlined"
               value={this.state.mobile}
+              required={true}
               error={this.state.mobileErr ? true : false}
               helperText={this.state.mobileErr}
               onChange={this.handleChange('mobile')}
@@ -76,6 +76,7 @@ class IndexOne extends Component {
               label='Email'
               margin="normal"
               variant="outlined"
+              required= {true}
               value={this.state.email}
               error={this.state.emailErr ? true : false}
               helperText={this.state.emailErr}
@@ -84,8 +85,7 @@ class IndexOne extends Component {
             
           </Grid>
 
-        </Grid>}
-      </ApolloConsumer>
+        </Grid>
     );
   }
 }

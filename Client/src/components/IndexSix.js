@@ -5,6 +5,8 @@ import Grid from '@material-ui/core/Grid';
 import DragAndDrop from './DragAndDrop';
 import TextFieldLabel from './TextFieldLabel';
 import { Typography, withStyles} from '@material-ui/core';
+import VideoCam from '@material-ui/icons/Videocam';
+
 
 const styles = theme => ({
     root: {
@@ -79,11 +81,12 @@ class IndexSix extends Component {
                         }} />
                 </Grid>
                 <Grid item >
-                        <Typography align="center" gutterBottom>Or</Typography>                            
+                        <Typography align="center" gutterBottom> Or </Typography>                            
                 </Grid>
-                <Grid item>
-                    <Paper className={classes.paper} square={false} elevation={1}>
-                        <DragAndDrop text={'Upload a video'} />
+                <Grid item >
+                    <Paper className={classes.paper} square={false} elevation={1} style={{alignItems:"center"}}>
+                        <VideoCam style={{margin: "88px",position: "absolute"}}/>
+                        <DragAndDrop text={'Upload video'} />
                     </Paper>
                 </Grid>
             </Grid>

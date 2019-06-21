@@ -18,6 +18,8 @@ import Header from "./Header";
 import { Grid, withStyles, Button, Typography } from "@material-ui/core";
 import gql from 'graphql-tag'
 import { ApolloConsumer, } from 'react-apollo'
+import ArrowForward from '@material-ui/icons/ArrowForward';
+
 
 
 const style = theme => ({
@@ -65,7 +67,7 @@ class HomeComp extends Component {
     this.state = {
       user_id: "50e21e38-d914-479f-a39e-fab882237063",
       profile_id : '',
-      step: 1,
+      step: 2,
       stateIndex:[
         {
           full_name:'',
@@ -165,7 +167,6 @@ class HomeComp extends Component {
         }
       })
       .then(data => {
-        console.log(data.data.update_basic_info.status);
         if(data.data.update_basic_info.status === false){
           let {stateIndex}=this.state;
           stateIndex[0]['mobileErr'] = data.data.update_basic_info.message
@@ -175,17 +176,15 @@ class HomeComp extends Component {
         }
         else{
           this.setState({
-            mobileErr:''
+            mobileErr:'',
+            profile_id: data.data.update_basic_info.profile.id
           })
         }
-        this.setState({
-          profile_id: data.data.update_basic_info.profile.id
-        });
-        console.log(this.state.profile_id);      
+        
 
       })
       .catch(err => {
-        console.log(err);
+        
       })
       return false    
     }
@@ -208,12 +207,12 @@ class HomeComp extends Component {
         }
       })
       .then(data => {
-        console.log(data.data.message)
-        console.log(this.state.profile_id);
+        
+        
         
       })
       .catch(err => {
-        console.log(err);
+        
       })
       return false
     }
@@ -240,10 +239,10 @@ class HomeComp extends Component {
         }
       })
         .then(data => {
-          console.log(this.state);          
+          
         })
         .catch(err => {
-          console.log(err);
+          
         })
       return false
     }
@@ -271,11 +270,11 @@ class HomeComp extends Component {
         }
       })
         .then(data => {
-          console.log(data.data);
-          console.log(this.state);
+          
+          
         })
         .catch(err => {
-          console.log(err);
+          
         })
       return false 
     }
@@ -302,11 +301,11 @@ class HomeComp extends Component {
         }
       })
         .then(data => {
-          console.log(data.data);
-          console.log(this.state);
+          
+          
         })
         .catch(err => {
-          console.log(err);
+          
         })
       return false 
     }
@@ -333,11 +332,11 @@ class HomeComp extends Component {
         }
       })
         .then(data => {
-          console.log(data.data);
-          console.log(this.state);
+          
+          
         })
         .catch(err => {
-          console.log(err);
+          
         })
       return false 
     }
@@ -364,11 +363,11 @@ class HomeComp extends Component {
         }
       })
         .then(data => {
-          console.log(data.data);
-          console.log(this.state);
+          
+          
         })
         .catch(err => {
-          console.log(err);
+          
         })
       return false 
     }
@@ -394,11 +393,11 @@ class HomeComp extends Component {
         }
       })
         .then(data => {
-          console.log(data.data);
-          console.log(this.state);
+          
+          
         })
         .catch(err => {
-          console.log(err);
+          
         })
       return false 
     }
@@ -425,11 +424,11 @@ class HomeComp extends Component {
         }
       })
         .then(data => {
-          console.log(data.data);
-          console.log(this.state);
+          
+          
         })
         .catch(err => {
-          console.log(err);
+          
         })
       return false 
     }
@@ -456,11 +455,11 @@ class HomeComp extends Component {
         }
       })
         .then(data => {
-          console.log(data.data);
-          console.log(this.state);
+          
+          
         })
         .catch(err => {
-          console.log(err);
+          
         })
       return false 
     }
@@ -487,11 +486,11 @@ class HomeComp extends Component {
         }
       })
         .then(data => {
-          console.log(data.data);
-          console.log(this.state);
+          
+          
         })
         .catch(err => {
-          console.log(err);
+          
         })
       return false 
     }
@@ -518,11 +517,11 @@ class HomeComp extends Component {
         }
       })
         .then(data => {
-          console.log(data.data);
-          console.log(this.state);
+          
+          
         })
         .catch(err => {
-          console.log(err);
+          
         })
       return false 
     }
@@ -553,11 +552,11 @@ class HomeComp extends Component {
         }
       })
         .then(data => {
-          console.log(data.data);
-          console.log(this.state);
+          
+          
         })
         .catch(err => {
-          console.log(err);
+          
         })
       return false 
     }
@@ -580,7 +579,7 @@ class HomeComp extends Component {
     const { classes } = this.props;
     
     let component = <p>Error: 404, page not found</p>;
-    let button = "Next";
+    let button = "Next "
     switch (step) {
       case 1:
         component = (
@@ -688,6 +687,8 @@ class HomeComp extends Component {
               handleChange={this.handleStatesUpdate}
               states={this.state.stateIndex[step - 1]} 
               profile_id={this.state.profile_id}
+              inputArr={this.state.stateIndex[8].inputArr}
+              selected_skillsArr = {this.state.stateIndex[8].selected_skillsArr}
             />
           </Grid>
         );
@@ -756,7 +757,8 @@ class HomeComp extends Component {
               </Grid>
               <Grid item container direction="column" className={classes.container}>
                 <Grid item className={classes.header}>
-                  {button === "Next" ? (
+                  {
+                    button === "Next "? (
                     <Header step={step} prevStep={this.prevStep} />
                   ) : (
                       ""
@@ -769,10 +771,20 @@ class HomeComp extends Component {
             <Grid item className={classes.bottomBtnContainer}>
               <Button className={classes.bottomBtn} onClick={(e) => {
                 this.nextStep(e,myClient)}}>
-                {button === "Next" ? (
-                  <Typography variant="body1">{button} &rarr;</Typography>
+                {
+                  button === "Next " ? (
+                  <div style={{display: "inline-flex",alignItems: "center"}}>
+                    <Typography variant="body1"><b> {button} </b> </Typography> 
+                    < ArrowForward style = {
+                      {
+                        fontSize: "1.15rem",
+                        marginLeft: "7px"
+                      }
+                    }
+                    />
+                  </div>
                 ) : (
-                    <Typography variant="body1">{button}</Typography>
+                  <Typography variant="body1"><b> {button} </b></Typography>
                   )}
               </Button>
             </Grid>

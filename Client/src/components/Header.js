@@ -40,7 +40,16 @@ class Header extends React.Component {
     let image = giveMyImage[step - 1];
     let isBackArrowHere = (
       <IconButton onClick={this.back}>
-        <Avatar src={backArrow} style={{ background: "#bdbdbd00" }} />
+        < Avatar src = {
+          backArrow
+        }
+        style = {
+          {
+            background: "#bdbdbd00",
+            color: "rgb(3, 82, 201)"
+          }
+        }
+        />
       </IconButton>
     );
 

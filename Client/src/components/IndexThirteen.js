@@ -67,11 +67,10 @@ const styles = theme => ({
     height: 200
   },
   label: {
-    // width: "100%",
     textAlign: "left",
-    fontSize: "smaller !important",
     color: theme.palette.primary.light
-  }
+  },
+  
 });
 
 class IndexThirteen extends Component {
@@ -195,7 +194,7 @@ class IndexThirteen extends Component {
           <TextFieldLabel text="What's your age ?" />
         </Grid>
         <Grid item container justify="center" alignItems="center">
-          <Grid item style={{ width: "98%" }}>
+          <Grid item style={{ width: "98%",marginTop: "17px" }}>
             <Slider
               min = {16}
               max = {60}
@@ -260,7 +259,7 @@ class IndexThirteen extends Component {
             <FormControlLabel
               checked={gender === 2 }
               value={2}
-              control={<Radio className={classes.label} />}
+              control={<Radio className={classes.label}/>}
               label="Female"
             />
             <FormControlLabel

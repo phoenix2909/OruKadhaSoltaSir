@@ -21,13 +21,18 @@ const style = theme => ({
 })
 
 class IndexTwo extends Component {
+  constructor(props){
+    super(props)
+    this.state = {
+      uploadedFile:''
+    }
+  }
   render() {
     const { classes } = this.props;
-
     return (
       <Grid container direction="row" justify="center" alignItems="center" className={classes.root}>
         <div className={classes.paper}>
-          <DragAndDrop text={'Upload your photo'} style={{ height: "100%" }} />
+          <DragAndDrop text={'Upload your photo'} style={{ height: "100%" }} uploadedFile={this.state.uploadedFile} />
         </div>
       </Grid>
     );

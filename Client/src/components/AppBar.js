@@ -8,7 +8,7 @@ import Typography from '@material-ui/core/Typography';
 
 const styles = {
   root: {
-    backgroundImage: 'linear-gradient(to right, #00d2ff 0%, #3a7bd5 51%)',
+    backgroundImage: 'linear-gradient(to left, #00d2ff 0%, #3a7bd5 51%)',
     color: 'white',
     textAlign: 'center',
     padding: 0
@@ -24,7 +24,9 @@ function ButtonAppBar(props) {
     <AppBar position="static">
       <Toolbar className={classes.root}>
         <Typography variant="h6" color="inherit" className={classes.grow}>
+          <b>
           #OruKadhaSollataSir
+          </b>
           </Typography>
       </Toolbar>
     </AppBar>

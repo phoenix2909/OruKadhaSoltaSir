@@ -4,9 +4,6 @@ import TextFieldLabel from "./TextFieldLabel";
 import { withStyles } from "@material-ui/core/styles";
 import PropTypes from "prop-types";
 import SliderComp from "./SliderComp";
-import { Query } from 'react-apollo';
-import gql from 'graphql-tag';
-
 const styles = theme => ({
   root: {
     flexGrow: 1,
@@ -34,8 +31,7 @@ class IndexTen extends Component {
   return _skills
 }
   handleChange = (rated_skills,event) => {
-    let all_skills = this.updateOrInsertSkills(rated_skills,this.state.all_skills)
-    console.info('ALL SKILLS',all_skills, this.state.all_skills)
+    let all_skills = this.updateOrInsertSkills(rated_skills,this.state.all_skills);
     this.setState({
       rated_skills,
       all_skills
@@ -50,24 +46,8 @@ class IndexTen extends Component {
   };
 
   render() {
-    const { classes } = this.props;
+    const { classes,inputArr } = this.props;
     return (
-      <Query query={GET_SKILLS} variables={
-        {
-          id: this.props.profile_id
-        }
-      }>
-        {({ data, error, loading, fetchMore }) => {
-          if (loading) {
-            return 'loading...';
-          }
-          if (error) {
-            return JSON.stringify(error);
-          }
-          console.log(data);
-          return (
-            
-
       <Grid
         container
         className={classes.root}
@@ -88,35 +68,19 @@ class IndexTen extends Component {
           spacing={2}
           style={{ marginTop: 8 }}
         >
-              {data.profile.skills.map((skill, index) => {
+              {inputArr.map((skill, index) => {
             return (
               <Grid item style={{ width: "100%" }} key={index}>
-                <SliderComp skillName={skill.skill.label} data = {skill.skill} onChange={this.handleChange}/>
+                <SliderComp skillName={skill} id={this.props.selected_skillsArr[index]} data = {this.props.selected_skillsArr} onChange={this.handleChange}/>
               </Grid>
             );
           })}
         </Grid>
       </Grid>
-          )
-        }}
-      </Query> 
     );
   }
 }
-const GET_SKILLS = gql `
-query GET_SKILLS($id:String) {
-  profile(id:$id)
-  {
-    skills{
-      skill
-      {
-        id
-        label
-      }
-    }
-  }
-}
-`;
+
 IndexTen.propTypes = {
   classes: PropTypes.object.isRequired
 };
